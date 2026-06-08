@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikSave - TikTok Video & Photo Downloader</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b0f19;
+        }
+        .gradient-bg {
+            background: radial-gradient(circle at top, #1e1b4b 0%, #0b0f19 100%);
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen gradient-bg flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="w-full max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                <i class="fa-brands fa-tiktok text-slate-100 mr-1 text-xl"></i> TikSave
+            </span>
+        </div>
+        <div class="text-sm text-slate-400">
+            <span>Free Video & Photo Downloader</span>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col justify-center items-center px-4 py-8">
+        <div class="w-full max-w-3xl text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight">
+                Download TikTok Videos & Photos <br>
+                <span class="bg-gradient-to-r from-pink-500 to-indigo-500 bg-clip-text text-transparent">Without Watermark</span>
+            </h1>
+            <p class="text-slate-400 text-base md:text-lg max-w-lg mx-auto">
+                Paste your TikTok link below to save high-quality videos, slide-show photos, or audio in just a few clicks.
+            </p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="w-full max-w-2xl glass-panel p-6 rounded-2xl shadow-2xl mb-8">
+            <div class="flex flex-col md:flex-row gap-3">
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                        <i class="fa-solid fa-link"></i>
+                    </span>
+                    <input 
+                        type="url" 
+                        id="tiktok-url" 
+                        placeholder="Paste TikTok link here..." 
+                        class="w-full pl-11 pr-24 py-4 bg-slate-900/80 border border-slate-700/50 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-slate-100 placeholder-slate-500 transition-all text-sm"
+                    >
+                    <button 
+                        id="paste-btn" 
+                        class="absolute inset-y-2 right-2 px-3 bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-medium rounded-lg transition-all flex items-center gap-1"
+                    >
+                        <i class="fa-regular fa-paste"></i> Paste
+                    </button>
+                </div>
+                <button 
+                    id="download-btn" 
+                    class="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
+                >
+                    <i class="fa-solid fa-arrow-down-long"></i> Download
+                </button>
+            </div>
+
+            <!-- Custom Processing Progress Bar (সিমুলেটেড প্রসেসিং বার) -->
+            <div id="loader" class="hidden mt-8">
+                <div class="flex justify-between mb-2 text-sm text-slate-400">
+                    <span>Server is processing your files...</span>
+                    <span id="progress-percent" class="font-semibold text-indigo-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-slate-800">
+                    <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-indigo-500 h-2 rounded-full transition-all duration-100" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Error Notification -->
+            <div id="error-alert" class="hidden mt-6 p-4 bg-red-950/40 border border-red-500/30 rounded-xl flex items-center gap-3 text-red-200 text-sm">
+                <i class="fa-solid fa-circle-exclamation text-red-500 text-lg"></i>
+                <span id="error-message">An error occurred. Please check your link.</span>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result-section" class="hidden w-full max-w-4xl glass-panel p-6 rounded-2xl shadow-2xl mb-12">
+            <h3 class="text-xl font-bold mb-6 text-slate-100 border-b border-slate-800 pb-3 flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-500"></i> Your Content is Ready
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column: Video/Images Preview -->
+                <div>
+                    <!-- Video Preview Block (Shown only for Video Posts) -->
+                    <div id="video-preview-block" class="hidden flex flex-col items-center justify-center bg-slate-950/50 rounded-xl p-3 border border-slate-800">
+                        <video id="preview-video" controls class="w-full max-h-[400px] rounded-lg shadow-lg"></video>
+                    </div>
+
+                    <!-- Photos Grid Block (Shown only for Photo Slide Posts on clicking 'Download Photos') -->
+                    <div id="photos-preview-block" class="hidden space-y-3">
+                        <h4 class="text-sm font-semibold text-slate-400">Select photos to save:</h4>
+                        <div id="photos-grid" class="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto p-2 bg-slate-950/40 rounded-xl border border-slate-800">
+                            <!-- JS injects photo download buttons here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Info & Dynamic Option Buttons -->
+                <div class="flex flex-col justify-between">
+                    <div>
+                        <!-- Creator Info -->
+                        <div class="flex items-center gap-3 mb-4 bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                            <img id="author-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-indigo-500">
+                            <div>
+                                <h4 id="author-name" class="font-semibold text-slate-200 leading-tight">User</h4>
+                                <p id="author-username" class="text-xs text-slate-500">@username</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Caption -->
+                        <p id="video-title" class="text-sm text-slate-300 leading-relaxed line-clamp-3 mb-6 bg-slate-900/20 p-3 rounded-lg border border-slate-800/30">
+                            No description.
+                        </p>
+                    </div>
+                    
+                    <!-- Buttons Container (Exactly as requested) -->
+                    <div class="space-y-4">
+                        
+                        <!-- 1. VIDEO TYPE BUTTONS -->
+                        <div id="video-download-options" class="hidden space-y-3">
+                            <button id="dl-video" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20">
+                                <i class="fa-solid fa-video"></i> Download Video
+                            </button>
+                        </div>
+
+                        <!-- 2. PHOTO TYPE BUTTONS -->
+                        <div id="photo-download-options" class="hidden space-y-3">
+                            <button id="dl-photos-toggle" class="w-full py-4 bg-pink-600 hover:bg-pink-500 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-pink-900/20">
+                                <i class="fa-solid fa-images"></i> Download Photos
+                            </button>
+                        </div>
+
+                        <!-- 3. AUDIO OPTION (Shown for both types if available) -->
+                        <div id="audio-download-container" class="hidden">
+                            <button id="dl-audio" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-slate-700">
+                                <i class="fa-solid fa-music"></i> Download Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-xs text-slate-500 mt-6 italic">
+                * Note: If the file opens in your browser instead of downloading, tap and hold (or right-click) and choose "Save link as...".
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-7xl mx-auto px-4 py-8 border-t border-slate-900 text-center text-slate-500 text-xs">
+        <p>&copy; 2026 TikSave. This tool is not affiliated with TikTok.</p>
+    </footer>
+
+    <script>
+        const downloadBtn = document.getElementById('download-btn');
+        const pasteBtn = document.getElementById('paste-btn');
+        const tiktokUrlInput = document.getElementById('tiktok-url');
+        const loader = document.getElementById('loader');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const errorAlert = document.getElementById('error-alert');
+        const errorMessage = document.getElementById('error-message');
+        const resultSection = document.getElementById('result-section');
+
+        // প্রসেসিং এর সময়সীমা নির্ধারণ (মিলিসেকেন্ডে)। যেমন: ৬০০০ = ৬ সেকেন্ড।
+        // আপনি চাইলে এটিকে বাড়িয়ে ১০ সেকেন্ড (10000) বা তার বেশি করতে পারেন।
+        const PROCESSING_TIME = 6000; 
+
+        // Clipboard Paste Helper
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                tiktokUrlInput.value = text;
+            } catch (err) {
+                alert('Please allow clipboard access or paste the link manually.');
+            }
+        });
+
+        // Search and Downloader Request
+        downloadBtn.addEventListener('click', async () => {
+            const url = tiktokUrlInput.value.trim();
+            if (!url) {
+                showError('Please paste a valid TikTok link first!');
+                return;
+            }
+            
+            // UI Reset
+            errorAlert.classList.add('hidden');
+            resultSection.classList.add('hidden');
+            loader.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressPercent.textContent = '0%';
+            
+            let fetchedData = null;
+            let fetchError = null;
+            let progressComplete = false;
+            let apiFetchComplete = false;
+
+            // ১. প্রসেসিং টাইমার অ্যানিমেশন (Simulated Timer)
+            let progress = 0;
+            const intervalStep = 60; // 60ms Interval
+            const totalSteps = PROCESSING_TIME / intervalStep;
+            const progressIncrement = 100 / totalSteps;
+
+            const progressInterval = setInterval(() => {
+                progress += progressIncrement;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                    progressComplete = true;
+                    completeProcess();
+                }
+                progressBar.style.width = `${Math.floor(progress)}%`;
+                progressPercent.textContent = `${Math.floor(progress)}%`;
+            }, intervalStep);
+
+            // ২. ব্যাকগ্রাউন্ডে এপিআই রিকোয়েস্ট
+            try {
+                const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Network response failed.');
+                
+                const rawData = await response.json();
+                const res = JSON.parse(rawData.contents);
+                
+                if (res.code === 0 && res.data) {
+                    fetchedData = res.data;
+                } else {
+                    fetchError = res.msg || 'Content not found. Make sure the video is public.';
+                }
+            } catch (err) {
+                console.error(err);
+                fetchError = 'Could not fetch data. Please try again.';
+            } finally {
+                apiFetchComplete = true;
+                completeProcess();
+            }
+
+            // টাইমার এবং এপিআই দুটোই শেষ হলে ফলাফল দেখাবে
+            function completeProcess() {
+                if (progressComplete && apiFetchComplete) {
+                    loader.classList.add('hidden');
+                    if (fetchError) {
+                        showError(fetchError);
+                    } else if (fetchedData) {
+                        displayResults(fetchedData);
+                    }
+                }
+            }
+        });
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorAlert.classList.remove('hidden');
+        }
+
+        function displayResults(data) {
+            document.getElementById('video-title').textContent = data.title || 'No Caption Provided.';
+            document.getElementById('author-name').textContent = data.author.nickname || 'TikTok User';
+            document.getElementById('author-username').textContent = `@${data.author.unique_id || 'user'}`;
+            document.getElementById('author-avatar').src = data.author.avatar || 'https://via.placeholder.com/150';
+
+            const videoPreviewBlock = document.getElementById('video-preview-block');
+            const photosPreviewBlock = document.getElementById('photos-preview-block');
+            const videoDownloadOptions = document.getElementById('video-download-options');
+            const photoDownloadOptions = document.getElementById('photo-download-options');
+            const audioDownloadContainer = document.getElementById('audio-download-container');
+            const photosGrid = document.getElementById('photos-grid');
+
+            // রিসেট এবং হাইড
+            videoPreviewBlock.classList.add('hidden');
+            photosPreviewBlock.classList.add('hidden');
+            videoDownloadOptions.classList.add('hidden');
+            photoDownloadOptions.classList.add('hidden');
+            audioDownloadContainer.classList.add('hidden');
+
+            const isPhotoPost = data.images && data.images.length > 0;
+
+            if (isPhotoPost) {
+                // PHOTO POST logic: Show "Download Photos" and "Download Audio"
+                photoDownloadOptions.classList.remove('hidden');
+                
+                // স্লাইডশোর ফটোগুলো গ্রিডে ইনজেক্ট করা হচ্ছে
+                photosGrid.innerHTML = '';
+                data.images.forEach((imgUrl, index) => {
+                    const imgCard = document.createElement('div');
+                    imgCard.className = 'border border-slate-800 rounded-lg overflow-hidden bg-slate-900/60 p-2';
+                    imgCard.innerHTML = `
+                        <img src="${imgUrl}" alt="Photo ${index + 1}" class="w-full h-28 object-cover rounded mb-2">
+                        <button onclick="window.open('${imgUrl}', '_blank')" class="w-full py-1 bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold rounded transition-all text-center block">
+                            <i class="fa-solid fa-download"></i> Save Photo ${index + 1}
+                        </button>
+                    `;
+                    photosGrid.appendChild(imgCard);
+                });
+
+                // "Download Photos" বাটনে ক্লিক করলে ইমেজের গ্রিডটি দেখাবে
+                const dlPhotosToggleBtn = document.getElementById('dl-photos-toggle');
+                dlPhotosToggleBtn.onclick = () => {
+                    photosPreviewBlock.classList.toggle('hidden');
+                    photosPreviewBlock.scrollIntoView({ behavior: 'smooth' });
+                };
+
+            } else {
+                // VIDEO POST logic: Show "Download Video" and "Download Audio"
+                videoPreviewBlock.classList.remove('hidden');
+                videoDownloadOptions.classList.remove('hidden');
+
+                const previewVideo = document.getElementById('preview-video');
+                previewVideo.src = data.play;
+
+                setupDownloadLink('dl-video', data.play);
+            }
+
+            // যদি অডিও ফাইল থাকে তবে সেটি "Download Audio" বাটনে যুক্ত হবে
+            if (data.music) {
+                audioDownloadContainer.classList.remove('hidden');
+                setupDownloadLink('dl-audio', data.music);
+            }
+
+            resultSection.classList.remove('hidden');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function setupDownloadLink(id, url) {
+            const btn = document.getElementById(id);
+            btn.onclick = () => {
+                window.open(url, '_blank');
+            };
+        }
+    </script>
+</body>
+  </html>
