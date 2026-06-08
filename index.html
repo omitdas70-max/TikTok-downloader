@@ -100,76 +100,59 @@
         </div>
 
         <!-- Result Section -->
-        <div id="result-section" class="hidden w-full max-w-4xl glass-panel p-6 rounded-2xl shadow-2xl mb-12">
+        <div id="result-section" class="hidden w-full max-w-3xl glass-panel p-6 rounded-2xl shadow-2xl mb-12">
             <h3 class="text-xl font-bold mb-6 text-slate-100 border-b border-slate-800 pb-3 flex items-center gap-2">
                 <i class="fa-solid fa-circle-check text-emerald-500"></i> Your Content is Ready
             </h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Left Column: Video/Images Preview -->
-                <div>
-                    <!-- Video Preview Block -->
-                    <div id="video-preview-block" class="hidden flex flex-col items-center justify-center bg-slate-950/50 rounded-xl p-3 border border-slate-800">
-                        <video id="preview-video" controls class="w-full max-h-[400px] rounded-lg shadow-lg"></video>
-                    </div>
-
-                    <!-- Photos Grid Block -->
-                    <div id="photos-preview-block" class="hidden space-y-3">
-                        <h4 class="text-sm font-semibold text-slate-400">Select photos to save:</h4>
-                        <div id="photos-grid" class="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto p-2 bg-slate-950/40 rounded-xl border border-slate-800">
-                            <!-- Dynamic images injected here -->
-                        </div>
+            <!-- Profile Info & Title (Always on top) -->
+            <div class="mb-6 bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img id="author-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-indigo-500">
+                    <div>
+                        <h4 id="author-name" class="font-semibold text-slate-200 leading-tight">User</h4>
+                        <p id="author-username" class="text-xs text-slate-500">@username</p>
                     </div>
                 </div>
-                
-                <!-- Right Column: Info & Dynamic Option Buttons -->
-                <div class="flex flex-col justify-between">
-                    <div>
-                        <!-- Creator Info -->
-                        <div class="flex items-center gap-3 mb-4 bg-slate-900/50 p-3 rounded-xl border border-slate-800">
-                            <img id="author-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-indigo-500">
-                            <div>
-                                <h4 id="author-name" class="font-semibold text-slate-200 leading-tight">User</h4>
-                                <p id="author-username" class="text-xs text-slate-500">@username</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Caption -->
-                        <p id="video-title" class="text-sm text-slate-300 leading-relaxed line-clamp-3 mb-6 bg-slate-900/20 p-3 rounded-lg border border-slate-800/30">
-                            No description.
-                        </p>
-                    </div>
-                    
-                    <!-- Buttons Container -->
-                    <div class="space-y-4">
-                        
-                        <!-- 1. VIDEO TYPE BUTTONS -->
-                        <div id="video-download-options" class="hidden space-y-3">
-                            <button id="dl-video" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20">
-                                <i class="fa-solid fa-video"></i> Download Video
-                            </button>
-                        </div>
+                <p id="video-title" class="text-sm text-slate-300 leading-relaxed bg-slate-950/40 p-3 rounded-lg border border-slate-800/30 flex-grow md:max-w-md">
+                    No description.
+                </p>
+            </div>
 
-                        <!-- 2. PHOTO TYPE BUTTONS -->
-                        <div id="photo-download-options" class="hidden space-y-3">
-                            <button id="dl-photos-toggle" class="w-full py-4 bg-pink-600 hover:bg-pink-500 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-pink-900/20">
-                                <i class="fa-solid fa-images"></i> Download Photos
-                            </button>
-                        </div>
+            <!-- Media Content Area (Middle) -->
+            <div class="mb-8">
+                <!-- Video Preview Block -->
+                <div id="video-preview-block" class="hidden flex flex-col items-center justify-center bg-slate-950/50 rounded-xl p-3 border border-slate-800">
+                    <video id="preview-video" controls class="w-full max-h-[400px] rounded-lg shadow-lg"></video>
+                </div>
 
-                        <!-- 3. AUDIO OPTION -->
-                        <div id="audio-download-container" class="hidden">
-                            <button id="dl-audio" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-slate-700">
-                                <i class="fa-solid fa-music"></i> Download Audio
-                            </button>
-                        </div>
+                <!-- Photos Preview Block (Photos automatically shown here) -->
+                <div id="photos-preview-block" class="hidden space-y-3">
+                    <h4 class="text-sm font-semibold text-slate-400 mb-2">Photos:</h4>
+                    <div id="photos-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-2 bg-slate-950/40 rounded-xl border border-slate-800">
+                        <!-- Dynamic photo cards (Photo on top, Button at the bottom) -->
                     </div>
                 </div>
             </div>
             
-            <p class="text-center text-xs text-slate-500 mt-6 italic">
-                * Note: If the file opens in your browser instead of downloading, tap and hold (or right-click) and choose "Save link as...".
-            </p>
+            <!-- Download Buttons Block (Bottom) -->
+            <div class="border-t border-slate-800 pt-6">
+                <div class="max-w-md mx-auto space-y-3">
+                    <!-- VIDEO TYPE BUTTONS -->
+                    <div id="video-download-options" class="hidden">
+                        <button id="dl-video" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20">
+                            <i class="fa-solid fa-video"></i> Download Video
+                        </button>
+                    </div>
+
+                    <!-- COMMON AUDIO OPTION -->
+                    <div id="audio-download-container" class="hidden">
+                        <button id="dl-audio" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-slate-700">
+                            <i class="fa-solid fa-music"></i> Download Audio
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -201,6 +184,41 @@
             }
         });
 
+        // Direct Download Core Function
+        async function downloadDirectly(url, filename, buttonId) {
+            const btn = document.getElementById(buttonId);
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Downloading...`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Download failed');
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(blobUrl);
+            } catch (err) {
+                // CORS Fallback: যদি ব্রাউজার CORS পলিসি ব্লক করে, তবে স্বয়ংক্রিয়ভাবে ব্রাউজারের ডিফল্ট ডাউনলোডে রিডাইরেক্ট হবে
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
         // Search and Downloader Request
         downloadBtn.addEventListener('click', async () => {
             const url = tiktokUrlInput.value.trim();
@@ -221,7 +239,7 @@
             let progressComplete = false;
             let apiFetchComplete = false;
 
-            // 1. Processing Timer Animation (Simulated Timer)
+            // 1. Processing Timer Animation
             let progress = 0;
             const intervalStep = 60; 
             const totalSteps = PROCESSING_TIME / intervalStep;
@@ -241,7 +259,6 @@
 
             // 2. Background API Request to RapidAPI
             try {
-                // আপনার RapidAPI-এর getVideo এন্ডপয়েন্টটি ব্যবহার করা হয়েছে
                 const apiUrl = `https://tiktok-download-video1.p.rapidapi.com/getVideo?url=${encodeURIComponent(url)}&hd=1`;
                 
                 const response = await fetch(apiUrl, {
@@ -295,64 +312,61 @@
             const videoPreviewBlock = document.getElementById('video-preview-block');
             const photosPreviewBlock = document.getElementById('photos-preview-block');
             const videoDownloadOptions = document.getElementById('video-download-options');
-            const photoDownloadOptions = document.getElementById('photo-download-options');
             const audioDownloadContainer = document.getElementById('audio-download-container');
             const photosGrid = document.getElementById('photos-grid');
 
-            // Reset UI
+            // Reset UI states
             videoPreviewBlock.classList.add('hidden');
             photosPreviewBlock.classList.add('hidden');
             videoDownloadOptions.classList.add('hidden');
-            photoDownloadOptions.classList.add('hidden');
             audioDownloadContainer.classList.add('hidden');
 
             const isPhotoPost = data.images && data.images.length > 0;
 
             if (isPhotoPost) {
-                photoDownloadOptions.classList.remove('hidden');
+                // PHOTO POST logic: স্লাইডশো থাকলে কোনো টগল বাটন ছাড়াই ফটোগুলো সরাসরি ওপরে লোড হবে
+                photosPreviewBlock.classList.remove('hidden');
                 
                 photosGrid.innerHTML = '';
                 data.images.forEach((imgUrl, index) => {
                     const imgCard = document.createElement('div');
-                    imgCard.className = 'border border-slate-800 rounded-lg overflow-hidden bg-slate-900/60 p-2';
+                    imgCard.className = 'border border-slate-800 rounded-lg overflow-hidden bg-slate-900/60 p-3 flex flex-col justify-between';
                     imgCard.innerHTML = `
-                        <img src="${imgUrl}" alt="Photo ${index + 1}" class="w-full h-28 object-cover rounded mb-2">
-                        <button onclick="window.open('${imgUrl}', '_blank')" class="w-full py-1 bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold rounded transition-all text-center block">
+                        <img src="${imgUrl}" alt="Photo ${index + 1}" class="w-full h-44 object-cover rounded mb-3">
+                        <button id="dl-photo-${index}" class="w-full py-2 bg-pink-600 hover:bg-pink-500 text-xs font-semibold rounded-lg transition-all text-center block">
                             <i class="fa-solid fa-download"></i> Save Photo ${index + 1}
                         </button>
                     `;
                     photosGrid.appendChild(imgCard);
+                    
+                    setupDownloadLink(`dl-photo-${index}`, imgUrl, `${data.id || 'tiktok'}_photo_${index + 1}.jpg`);
                 });
 
-                const dlPhotosToggleBtn = document.getElementById('dl-photos-toggle');
-                dlPhotosToggleBtn.onclick = () => {
-                    photosPreviewBlock.classList.toggle('hidden');
-                    photosPreviewBlock.scrollIntoView({ behavior: 'smooth' });
-                };
-
             } else {
+                // VIDEO POST logic: ভিডিওর ক্ষেত্রে প্রিভিউ এবং ওয়ান-ক্লিক ডিরেক্ট ডাউনলোড বাটন দেখাবে
                 videoPreviewBlock.classList.remove('hidden');
                 videoDownloadOptions.classList.remove('hidden');
 
                 const previewVideo = document.getElementById('preview-video');
                 previewVideo.src = data.play;
 
-                setupDownloadLink('dl-video', data.play);
+                setupDownloadLink('dl-video', data.play, `${data.id || 'tiktok'}_video.mp4`);
             }
 
+            // Audio download setup (ভিডিও বা ফটো উভয় পোস্টের নিচে অডিও ডাউনলোড অপশন একই সারিবদ্ধভাবে থাকবে)
             if (data.music) {
                 audioDownloadContainer.classList.remove('hidden');
-                setupDownloadLink('dl-audio', data.music);
+                setupDownloadLink('dl-audio', data.music, `${data.id || 'tiktok'}_audio.mp3`);
             }
 
             resultSection.classList.remove('hidden');
             resultSection.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function setupDownloadLink(id, url) {
+        function setupDownloadLink(id, url, filename) {
             const btn = document.getElementById(id);
             btn.onclick = () => {
-                window.open(url, '_blank');
+                downloadDirectly(url, filename, id);
             };
         }
     </script>
