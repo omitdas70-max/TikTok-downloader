@@ -81,7 +81,7 @@
                 </button>
             </div>
 
-            <!-- Custom Processing Progress Bar (সিমুলেটেড প্রসেসিং বার) -->
+            <!-- Custom Processing Progress Bar -->
             <div id="loader" class="hidden mt-8">
                 <div class="flex justify-between mb-2 text-sm text-slate-400">
                     <span>Server is processing your files...</span>
@@ -108,16 +108,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Left Column: Video/Images Preview -->
                 <div>
-                    <!-- Video Preview Block (Shown only for Video Posts) -->
+                    <!-- Video Preview Block -->
                     <div id="video-preview-block" class="hidden flex flex-col items-center justify-center bg-slate-950/50 rounded-xl p-3 border border-slate-800">
                         <video id="preview-video" controls class="w-full max-h-[400px] rounded-lg shadow-lg"></video>
                     </div>
 
-                    <!-- Photos Grid Block (Shown only for Photo Slide Posts on clicking 'Download Photos') -->
+                    <!-- Photos Grid Block -->
                     <div id="photos-preview-block" class="hidden space-y-3">
                         <h4 class="text-sm font-semibold text-slate-400">Select photos to save:</h4>
                         <div id="photos-grid" class="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto p-2 bg-slate-950/40 rounded-xl border border-slate-800">
-                            <!-- JS injects photo download buttons here -->
+                            <!-- Dynamic images injected here -->
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                         </p>
                     </div>
                     
-                    <!-- Buttons Container (Exactly as requested) -->
+                    <!-- Buttons Container -->
                     <div class="space-y-4">
                         
                         <!-- 1. VIDEO TYPE BUTTONS -->
@@ -157,7 +157,7 @@
                             </button>
                         </div>
 
-                        <!-- 3. AUDIO OPTION (Shown for both types if available) -->
+                        <!-- 3. AUDIO OPTION -->
                         <div id="audio-download-container" class="hidden">
                             <button id="dl-audio" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-slate-700">
                                 <i class="fa-solid fa-music"></i> Download Audio
@@ -189,8 +189,6 @@
         const errorMessage = document.getElementById('error-message');
         const resultSection = document.getElementById('result-section');
 
-        // প্রসেসিং এর সময়সীমা নির্ধারণ (মিলিসেকেন্ডে)। যেমন: ৬০০০ = ৬ সেকেন্ড।
-        // আপনি চাইলে এটিকে বাড়িয়ে ১০ সেকেন্ড (10000) বা তার বেশি করতে পারেন।
         const PROCESSING_TIME = 6000; 
 
         // Clipboard Paste Helper
@@ -223,9 +221,9 @@
             let progressComplete = false;
             let apiFetchComplete = false;
 
-            // ১. প্রসেসিং টাইমার অ্যানিমেশন (Simulated Timer)
+            // 1. Processing Timer Animation (Simulated Timer)
             let progress = 0;
-            const intervalStep = 60; // 60ms Interval
+            const intervalStep = 60; 
             const totalSteps = PROCESSING_TIME / intervalStep;
             const progressIncrement = 100 / totalSteps;
 
@@ -241,16 +239,22 @@
                 progressPercent.textContent = `${Math.floor(progress)}%`;
             }, intervalStep);
 
-            // ২. ব্যাকগ্রাউন্ডে এপিআই রিকোয়েস্ট
+            // 2. Background API Request to RapidAPI
             try {
-                const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                // আপনার RapidAPI-এর getVideo এন্ডপয়েন্টটি ব্যবহার করা হয়েছে
+                const apiUrl = `https://tiktok-download-video1.p.rapidapi.com/getVideo?url=${encodeURIComponent(url)}&hd=1`;
                 
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error('Network response failed.');
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-host': 'tiktok-download-video1.p.rapidapi.com',
+                        'x-rapidapi-key': '6222bb090amsh354df0f2f14da65p11b455jsnc75e2719786e'
+                    }
+                });
                 
-                const rawData = await response.json();
-                const res = JSON.parse(rawData.contents);
+                if (!response.ok) throw new Error('API connection failed.');
+                
+                const res = await response.json();
                 
                 if (res.code === 0 && res.data) {
                     fetchedData = res.data;
@@ -259,13 +263,12 @@
                 }
             } catch (err) {
                 console.error(err);
-                fetchError = 'Could not fetch data. Please try again.';
+                fetchError = 'Could not fetch data from server. Please try again.';
             } finally {
                 apiFetchComplete = true;
                 completeProcess();
             }
 
-            // টাইমার এবং এপিআই দুটোই শেষ হলে ফলাফল দেখাবে
             function completeProcess() {
                 if (progressComplete && apiFetchComplete) {
                     loader.classList.add('hidden');
@@ -296,7 +299,7 @@
             const audioDownloadContainer = document.getElementById('audio-download-container');
             const photosGrid = document.getElementById('photos-grid');
 
-            // রিসেট এবং হাইড
+            // Reset UI
             videoPreviewBlock.classList.add('hidden');
             photosPreviewBlock.classList.add('hidden');
             videoDownloadOptions.classList.add('hidden');
@@ -306,10 +309,8 @@
             const isPhotoPost = data.images && data.images.length > 0;
 
             if (isPhotoPost) {
-                // PHOTO POST logic: Show "Download Photos" and "Download Audio"
                 photoDownloadOptions.classList.remove('hidden');
                 
-                // স্লাইডশোর ফটোগুলো গ্রিডে ইনজেক্ট করা হচ্ছে
                 photosGrid.innerHTML = '';
                 data.images.forEach((imgUrl, index) => {
                     const imgCard = document.createElement('div');
@@ -323,7 +324,6 @@
                     photosGrid.appendChild(imgCard);
                 });
 
-                // "Download Photos" বাটনে ক্লিক করলে ইমেজের গ্রিডটি দেখাবে
                 const dlPhotosToggleBtn = document.getElementById('dl-photos-toggle');
                 dlPhotosToggleBtn.onclick = () => {
                     photosPreviewBlock.classList.toggle('hidden');
@@ -331,7 +331,6 @@
                 };
 
             } else {
-                // VIDEO POST logic: Show "Download Video" and "Download Audio"
                 videoPreviewBlock.classList.remove('hidden');
                 videoDownloadOptions.classList.remove('hidden');
 
@@ -341,7 +340,6 @@
                 setupDownloadLink('dl-video', data.play);
             }
 
-            // যদি অডিও ফাইল থাকে তবে সেটি "Download Audio" বাটনে যুক্ত হবে
             if (data.music) {
                 audioDownloadContainer.classList.remove('hidden');
                 setupDownloadLink('dl-audio', data.music);
@@ -359,4 +357,4 @@
         }
     </script>
 </body>
-  </html>
+</html>
