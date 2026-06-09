@@ -105,7 +105,7 @@
                 <i class="fa-solid fa-circle-check text-emerald-500"></i> Your Content is Ready
             </h3>
             
-            <!-- Profile Info & Title (Always on top) -->
+            <!-- Profile Info & Title -->
             <div class="mb-6 bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                 <div class="flex items-center gap-3">
                     <img id="author-avatar" src="" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-indigo-500">
@@ -119,23 +119,23 @@
                 </p>
             </div>
 
-            <!-- Media Content Area (Middle) -->
+            <!-- Media Content Area -->
             <div class="mb-8">
                 <!-- Video Preview Block -->
                 <div id="video-preview-block" class="hidden flex flex-col items-center justify-center bg-slate-950/50 rounded-xl p-3 border border-slate-800">
                     <video id="preview-video" controls class="w-full max-h-[400px] rounded-lg shadow-lg"></video>
                 </div>
 
-                <!-- Photos Preview Block (Photos automatically shown here) -->
+                <!-- Photos Preview Block -->
                 <div id="photos-preview-block" class="hidden space-y-3">
                     <h4 class="text-sm font-semibold text-slate-400 mb-2">Photos:</h4>
                     <div id="photos-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-2 bg-slate-950/40 rounded-xl border border-slate-800">
-                        <!-- Dynamic photo cards (Photo on top, Button at the bottom) -->
+                        <!-- Dynamic photo cards -->
                     </div>
                 </div>
             </div>
             
-            <!-- Download Buttons Block (Bottom) -->
+            <!-- Download Buttons Block -->
             <div class="border-t border-slate-800 pt-6">
                 <div class="max-w-md mx-auto space-y-3">
                     <!-- VIDEO TYPE BUTTONS -->
@@ -162,6 +162,12 @@
     </footer>
 
     <script>
+        // ==========================================
+        // আপনার মোনেটাগ (Monetag) স্মার্টলিঙ্ক নিচে সেট করা হলো
+        // ==========================================
+        const AD_DIRECT_LINK = 'https://omg10.com/4/11123568'; 
+
+
         const downloadBtn = document.getElementById('download-btn');
         const pasteBtn = document.getElementById('paste-btn');
         const tiktokUrlInput = document.getElementById('tiktok-url');
@@ -191,6 +197,11 @@
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Downloading...`;
             
+            // ডাউনলোড বাটনে ক্লিক করা মাত্রই আপনার মোনেটাগ বিজ্ঞাপনটি নতুন ট্যাবে ওপেন হবে
+            if (AD_DIRECT_LINK && AD_DIRECT_LINK !== '') {
+                window.open(AD_DIRECT_LINK, '_blank');
+            }
+            
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Download failed');
@@ -205,10 +216,10 @@
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(blobUrl);
             } catch (err) {
-                // CORS Fallback: যদি ব্রাউজার CORS পলিসি ব্লক করে, তবে স্বয়ংক্রিয়ভাবে ব্রাউজারের ডিফল্ট ডাউনলোডে রিডাইরেক্ট হবে
+                // Fallback direct download (CORS limitation fallback)
                 const a = document.createElement('a');
                 a.href = url;
-                a.target = '_blank';
+                a.target = '_self'; 
                 a.download = filename;
                 document.body.appendChild(a);
                 a.click();
@@ -324,7 +335,6 @@
             const isPhotoPost = data.images && data.images.length > 0;
 
             if (isPhotoPost) {
-                // PHOTO POST logic: স্লাইডশো থাকলে কোনো টগল বাটন ছাড়াই ফটোগুলো সরাসরি ওপরে লোড হবে
                 photosPreviewBlock.classList.remove('hidden');
                 
                 photosGrid.innerHTML = '';
@@ -343,7 +353,6 @@
                 });
 
             } else {
-                // VIDEO POST logic: ভিডিওর ক্ষেত্রে প্রিভিউ এবং ওয়ান-ক্লিক ডিরেক্ট ডাউনলোড বাটন দেখাবে
                 videoPreviewBlock.classList.remove('hidden');
                 videoDownloadOptions.classList.remove('hidden');
 
@@ -353,7 +362,6 @@
                 setupDownloadLink('dl-video', data.play, `${data.id || 'tiktok'}_video.mp4`);
             }
 
-            // Audio download setup (ভিডিও বা ফটো উভয় পোস্টের নিচে অডিও ডাউনলোড অপশন একই সারিবদ্ধভাবে থাকবে)
             if (data.music) {
                 audioDownloadContainer.classList.remove('hidden');
                 setupDownloadLink('dl-audio', data.music, `${data.id || 'tiktok'}_audio.mp3`);
