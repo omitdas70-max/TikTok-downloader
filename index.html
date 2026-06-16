@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google Site Verification Tag -->
     <meta name="google-site-verification" content="CIOcR6MYL24x-rro4MAZD0X4Z2DegRHYcPLw_NMo-2w" />
+    
+    <!-- আপনার মোনেটাগ ডোমেইন ভেরিফিকেশন ট্যাগ -->
+    <meta name="monetag" content="c1f79110ca080481488fc9baeace7603">
     
     <title>TikSave - TikTok Video & Photo Downloader</title>
     
+    <!-- ======================================================= -->
+    <!-- আপনার মোনেটাগ (Monetag) মাল্টিট্যাগ কোড (বিজ্ঞাপন সচল করার জন্য) -->
+    <!-- ======================================================= -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="250409" async data-cfasync="false"></script>
+    <!-- ======================================================= -->
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -165,12 +173,8 @@
     </footer>
 
     <script>
-        // ==========================================
-        // আপনার মোনেটাগ (Monetag) স্মার্টলিঙ্ক নিচে সেট করা হলো
-        // ==========================================
-        const AD_DIRECT_LINK = 'https://omg10.com/4/11123568'; 
-
-
+        // বিজ্ঞাপনের লিংক এবং সেটিংস এখন সরাসরি মাল্টিট্যাগ স্ক্রিপ্ট দ্বারা পরিচালিত হচ্ছে।
+        
         const downloadBtn = document.getElementById('download-btn');
         const pasteBtn = document.getElementById('paste-btn');
         const tiktokUrlInput = document.getElementById('tiktok-url');
@@ -193,17 +197,12 @@
             }
         });
 
-        // Direct Download Core Function
+        // Direct Download Core Function (কোনো পপআপ বা উইন্ডো ওপেন ছাড়া সরাসরি ডাউনলোড হবে)
         async function downloadDirectly(url, filename, buttonId) {
             const btn = document.getElementById(buttonId);
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Downloading...`;
-            
-            // ডাউনলোড বাটনে ক্লিক করা মাত্রই আপনার মোনেটাগ বিজ্ঞাপনটি নতুন ট্যাবে ওপেন হবে
-            if (AD_DIRECT_LINK && AD_DIRECT_LINK !== '') {
-                window.open(AD_DIRECT_LINK, '_blank');
-            }
             
             try {
                 const response = await fetch(url);
@@ -382,4 +381,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
