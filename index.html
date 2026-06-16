@@ -11,9 +11,9 @@
     <title>TikSave - TikTok Video & Photo Downloader</title>
     
     <!-- ======================================================= -->
-    <!-- আপনার মোনেটাগ (Monetag) মাল্টিট্যাগ কোড (বিজ্ঞাপন সচল করার জন্য) -->
+    <!-- আপনার মোনেটাগের নতুন শুধুমাত্র Vignette Banner কোডটি নিচে দেওয়া হলো -->
     <!-- ======================================================= -->
-    <script src="https://quge5.com/88/tag.min.js" data-zone="250409" async data-cfasync="false"></script>
+    <script>(function(s){s.dataset.zone='11157719',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <!-- ======================================================= -->
 
     <!-- Tailwind CSS CDN -->
@@ -173,8 +173,6 @@
     </footer>
 
     <script>
-        // বিজ্ঞাপনের লিংক এবং সেটিংস এখন সরাসরি মাল্টিট্যাগ স্ক্রিপ্ট দ্বারা পরিচালিত হচ্ছে।
-        
         const downloadBtn = document.getElementById('download-btn');
         const pasteBtn = document.getElementById('paste-btn');
         const tiktokUrlInput = document.getElementById('tiktok-url');
@@ -197,7 +195,7 @@
             }
         });
 
-        // Direct Download Core Function (কোনো পপআপ বা উইন্ডো ওপেন ছাড়া সরাসরি ডাউনলোড হবে)
+        // Direct Download Core Function (কোনো পপআপ বা বিজ্ঞাপনী উইন্ডো ওপেন করা ছাড়া সরাসরি ব্রাউজারে ব্যাকগ্রাউন্ডে ডাউনলোড হবে)
         async function downloadDirectly(url, filename, buttonId) {
             const btn = document.getElementById(buttonId);
             const originalText = btn.innerHTML;
