@@ -10,12 +10,6 @@
     
     <title>TikSave - TikTok Video & Photo Downloader</title>
     
-    <!-- ======================================================= -->
-    <!-- আপনার মোনেটাগের নতুন শুধুমাত্র Vignette Banner কোডটি নিচে দেওয়া হলো -->
-    <!-- ======================================================= -->
-    <script>(function(s){s.dataset.zone='11157719',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <!-- ======================================================= -->
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -173,6 +167,12 @@
     </footer>
 
     <script>
+        // ==========================================
+        // আপনার মোনেটাগ (Monetag) বিজ্ঞাপন লিংক
+        // ==========================================
+        const AD_DIRECT_LINK = 'https://omg10.com/4/11123568'; 
+
+
         const downloadBtn = document.getElementById('download-btn');
         const pasteBtn = document.getElementById('paste-btn');
         const tiktokUrlInput = document.getElementById('tiktok-url');
@@ -195,13 +195,19 @@
             }
         });
 
-        // Direct Download Core Function (কোনো পপআপ বা বিজ্ঞাপনী উইন্ডো ওপেন করা ছাড়া সরাসরি ব্রাউজারে ব্যাকগ্রাউন্ডে ডাউনলোড হবে)
+        // Direct Download Core Function (মোনেটাগ বিজ্ঞাপনটি নতুন ট্যাবে ওপেন হবে এবং একই সাথে মূল ফাইলটি সরাসরি ব্রাউজারে ডাউনলোড হবে)
         async function downloadDirectly(url, filename, buttonId) {
             const btn = document.getElementById(buttonId);
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Downloading...`;
             
+            // ১. ব্যাকগ্রাউন্ডে আপনার মোনেটাগ বিজ্ঞাপন লিংকটি নতুন ট্যাবে ওপেন হবে
+            if (AD_DIRECT_LINK && AD_DIRECT_LINK !== '') {
+                window.open(AD_DIRECT_LINK, '_blank');
+            }
+            
+            // ২. একই সময়ে ফাইলটি সরাসরি ব্রাউজারে ব্যাকগ্রাউন্ডে ডাউনলোড হতে থাকবে
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Download failed');
